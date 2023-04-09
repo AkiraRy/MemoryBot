@@ -41,15 +41,15 @@ class MemoryBot(discord.Client):
         if message.content.upper() == "CHAT ACTIVATIAN":
             await message.channel.send("---STARTING ACTIVATION---")
 
-            history = ''
-            print(history)
-            with open('./history.txt','r', encoding='utf-8') as f:
-                history = f.read()
-            history = history.replace('\n', ' ')
-            print(history)
+            #history = ''
+            #print(history)
+            #with open('./history.txt','r', encoding='utf-8') as f:
+                #history = f.read()
+            #history = history.replace('\n', ' ')
+            #print(history)
             message_history = [
-                {"role": "system", "content": history},
-                {"role": "user", "content": "hi how is your day"},
+                #{"role": "system", "content": history},
+                #{"role": "user", "content": "hi how is your day"},
             ]
             # {"role": "system", "content": history},
             # {"role": "user", "content": history},
