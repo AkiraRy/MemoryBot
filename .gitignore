@@ -1,0 +1,13 @@
+__pycache__
+credentials.json
+token.json
+test.py
+quickstart.py
+bot_test
+.env
+credentialsService.json
+TODO
+send.py
+token(metadata_readonly).json
+translateDiscord.txt
+values.txt
