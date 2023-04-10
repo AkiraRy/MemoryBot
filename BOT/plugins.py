@@ -323,6 +323,7 @@ def search_files(folder_id, size=8) :
             if int(f.get("size", 0)) < size * 1024 * 1024
         ]
         #TODO make a complex filler for googles images, code under just returs 5 random image
+        print(filtered_files)
         return random.sample(filtered_files, 5)
 
 
@@ -364,10 +365,11 @@ if __name__ == "__main__":
     dic = search_folders()
     # print(dic)
     my_folder = search_folderID(dic, 'test')
+    print(my_folder)
     filedic = search_files(my_folder)
-    print(filedic)
-    for items in filedic:
-        value = download_file(items['id'])
-        image = Image.open(io.BytesIO(value))
-        print(value)
-        image.show()
+    print(filedic.items())
+    # for items in filedic:
+    #     value = download_file(items['id'])
+    #     image = Image.open(io.BytesIO(value))
+    #     print(value)
+    #     image.show()

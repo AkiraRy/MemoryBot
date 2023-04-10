@@ -1,10 +1,11 @@
 import os
-import random
+import asyncio
 import openai
 import discord
 from dotenv import load_dotenv
 from keep_alive import keep_alive
-
+import traceback
+from plugins import *
 
 load_dotenv()
 TOKEN = os.environ['DISCORD_TOKEN']
@@ -72,17 +73,48 @@ class MemoryBot(discord.Client):
                 message_history.append({"role": "assistant", "content": response.choices[0].message.content})
                 await message.channel.send(response.choices[0].message.content)
 
-    async def start_bot(self):
-        try:
-            await self.start(TOKEN)
-        finally:
-            await self.close()
+
+        if message.content.lower() == "send gmage":
+
+            dict = search_folders()
+            # print(dic)
+            #TODO add parameters to env, and use them to pic a folder
+            my_folder = search_folderID(dict, 'Anime')
+            filedic = search_files(my_folder)
+            for items in filedic:
+                print(items)
+                await self.send_pic(items['id'], message.channel, name=items['name'], google=True)
+
+    async def send_pic(self, image_path, channel, name="" , spoiler=False, google=False):
+        if google:
+            picture = discord.File(io.BytesIO(download_file(image_path)), filename=name)
+            if spoiler:
+                picture.spoiler=True
+            try:
+                await channel.send(file=picture)
+            except Exception as e:
+                print(traceback.format_exc())
+                await channel.send("Files is too large")
+
+        else :
+            with open(image_path, 'rb') as f:
+                # noinspection PyTypeChecker
+                picture = discord.File(f, filename=image_path.split("\\")[-1])
+                if spoiler:
+                    picture.spoiler = True
+                try:
+                    await channel.send(file=picture)
+                except Exception as e:
+                    print(traceback.format_exc())
+                    await channel.send("Files is too large")
+
+        await asyncio.sleep(3)
 
     async def on_disconnect(self, message):
         print("stop")
         await message.channel.send('MemoryBot has been disconnected!')
 
 
-client = MemoryBot(intents=intents)
+client = MemoryBot(intents=intents, heartbeat_interval=60.0)
 keep_alive()
 client.run(TOKEN)
