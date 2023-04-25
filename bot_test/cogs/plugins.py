@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from google_auth_oauthlib.flow import InstalledAppFlow
 from nsfw_detector import predict
 from pathlib import Path
-from PIL import Image
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -84,7 +83,6 @@ def filler(image_files, limit, date="", rd=False):
 
 """
     make it with buttons each button represents folder on disk d aka telegram/image, anime, car, girls so on
-      
 """
 
 
@@ -109,7 +107,7 @@ def copiesDelete(path_to_folder):
     print("copiesDelete has ended it work!")
 
 
-model = predict.load_model(os.getenv('NSFW'))
+model = predict.load_model(os.getenv("NSFW"))
 
 
 def is_nsfw(path):
@@ -145,7 +143,8 @@ def is_nsfwPr(path):
         return
     # Open image file
     results = predict.classify(model, path)
-    return {"hentai": results[path]['hentai'], "porn": results[path]['porn'], "sexy": results[path]['sexy']}
+    return results
+    #return {"hentai": results[path]['hentai'], "porn": results[path]['porn'], "sexy": results[path]['sexy']}
 
 
 # functions to sort between 50-100% of hentai, sexy, porn with names of folders category+number
@@ -204,6 +203,7 @@ def switchP(value, org_path):
 # function to sort between 3 values sexy, hent, porn if value is >=0.8 or other criteria
 
 def switchM(list_value, org_path):
+    """ Originally used for sorting an folder from H S P """
     # PATH IN TARGET_FOLDERS JUST REPLACE WITH YOUR COMFORTABLE, I`M LAZY TO MAKE MORE TRY_CATCH
     hentai = list_value['hentai']
     sexy = list_value['sexy']
@@ -214,25 +214,24 @@ def switchM(list_value, org_path):
         if not os.path.isfile(org_path):
             print(f"{org_path} Not a picture")
             return
-        path_H = ""
+        path_H=""
         target_folder = os.path.abspath(path_H)
         shutil.move(org_path, os.path.join(target_folder, org_path.split("\\")[-1]))
     elif sexy >= 0.70 or (triple >= 0.8 and sexy >= 0.5):
         if not os.path.isfile(org_path):
             print(f"{org_path} Not a picture")
             return
-        path_S = ""
+        path_S=""
         target_folder = os.path.abspath(path_S)
         shutil.move(org_path, os.path.join(target_folder, org_path.split("\\")[-1]))
     elif porn >= 0.65 or (triple >= 0.8 and porn >= 0.5):
         if not os.path.isfile(org_path):
             print(f"{org_path} Not a picture")
             return
-        path_P = ""
+        path_P=""
         target_folder = os.path.abspath(path_P)
         shutil.move(org_path, os.path.join(target_folder, org_path.split("\\")[-1]))
     pass
-
 
 
 def search_folders():
@@ -287,14 +286,14 @@ def search_folderID(folders, name) :
     else:
         print("The Name is not correct or there is no such folder")
 
-def search_files(folder_id, size=8) :
+def search_files(folder_id, size=8, number=5) :
     """
         Search for files within a folder that are smaller than the specified size.
 
         :param folder_id: The ID of the folder to search within.
         :param max_size_mb: The maximum file size in MB.
         :return: A list of file objects that match the search criteria.
-        """
+    """
     try:
         # Load credentials and create Drive API client
         scopes = ['https://www.googleapis.com/auth/drive.readonly']
@@ -313,7 +312,7 @@ def search_files(folder_id, size=8) :
             if int(f.get("size", 0)) < size * 1024 * 1024
         ]
         #TODO make a complex filler for googles images, code under just returs 5 random image
-        return random.sample(filtered_files, 5)
+        return random.sample(filtered_files, number)
 
 
     except HttpError as error:
@@ -347,8 +346,6 @@ def download_file(file_id):
         file = None
 
     return file.getvalue()
-
-
 
 if __name__ == "__main__":
     print("main of plugins")

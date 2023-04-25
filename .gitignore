@@ -3,7 +3,6 @@ credentials.json
 token.json
 test.py
 quickstart.py
-bot_test
 .env
 credentialsService.json
 TODO
@@ -13,3 +12,4 @@ translatorDiscord.txt
 values.txt
 test
 .idea
+*.jpg

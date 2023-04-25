@@ -38,12 +38,6 @@ class MemoryBot(discord.Client):
             'Hello ' + message.author.name + '!',
             'Good, how are you ' + message.author.name + '?',
         ]
-        # pre_answers = {
-        #     '^botservers': await message.channel.send(f'I`m in {len(client.guilds)} servers!'),
-        #     "hi": "print(hello)"
-        # }
-        # if message.content.lower() in pre_answers:
-        #     await exec(pre_answers[message.content.lower()])
 
         if message.content.lower() in greetings:
             response = random.choice(answers)
@@ -91,14 +85,14 @@ class MemoryBot(discord.Client):
             await message.channel.send("---STARTING ACTIVATION---")
 
             history = ''
-            print(history)
-            with open('./history.txt', 'r', encoding='utf-8') as f:
-                history = f.read()
-            history = history.replace('\n', ' ')
-            print(history)
+            # print(history)
+            # with open('./history.txt', 'r', encoding='utf-8') as f:
+            #     history = f.read()
+            # history = history.replace('\n', ' ')
+            #print(history)
             message_history = [
-                {"role": "system", "content": history},
-                {"role": "user", "content": "hi how is your day"},
+                #{"role": "system", "content": history},
+                #{"role": "user", "content": "hi how is your day"},
             ]
             # {"role": "system", "content": history},
             # {"role": "user", "content": history},
@@ -122,7 +116,7 @@ class MemoryBot(discord.Client):
         if message.content.lower() == "send gmage":
 
             dict = search_folders()
-            # print(dic)
+            print(dict)
             #TODO add parameters to env, and use them to pic a folder
             my_folder = search_folderID(dict, 'Anime')
             filedic = search_files(my_folder)
