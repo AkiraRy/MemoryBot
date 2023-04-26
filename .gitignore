@@ -13,3 +13,5 @@ values.txt
 test
 .idea
 *.jpg
+.log
+googlesTOKEN.py

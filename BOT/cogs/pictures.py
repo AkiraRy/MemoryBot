@@ -7,6 +7,8 @@ import sys
 sys.path.append(os.getenv('FOLDER_COGS'))
 from plugins import *
 
+async def is_botchat(ctx):
+    return ctx.channel.id == os.getenv('BOT_CHAT')
 
 class Pictures(commands.Cog):
 
@@ -14,6 +16,7 @@ class Pictures(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.check(is_botchat)
     async def send_pic(self, ctx, type : str = "random", number : int = 5):
         if number >= 30:
             number = 5
