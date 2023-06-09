@@ -4,20 +4,22 @@ import discord
 from discord.ext import commands
 import os
 import sys
+
 sys.path.append(os.getenv('FOLDER_COGS'))
 from plugins import *
 
 async def is_botchat(ctx):
-    return ctx.channel.id == os.getenv('BOT_CHAT')
+    return ctx.channel.id == int(os.getenv('BOT_CHAT'))
 
 class Pictures(commands.Cog):
 
-    def __int__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
     @commands.check(is_botchat)
     async def send_pic(self, ctx, type : str = "random", number : int = 5):
+        print("here")
         if number >= 30:
             number = 5
         """
@@ -73,9 +75,9 @@ class Pictures(commands.Cog):
 
 
 async def setup(bot):
-    print("I`m being loaded")
+    print("Pictures being loaded")
     await bot.add_cog(Pictures(bot))
 
 async def teardown(bot):
     await bot.remove_cog(Pictures(bot))
-    print('I am being unloaded!')
+    print('Pictures being unloaded!')

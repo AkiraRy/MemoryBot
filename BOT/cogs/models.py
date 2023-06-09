@@ -1,5 +1,4 @@
 import asyncio
-import traceback
 import discord
 from discord.ext import commands
 import os
@@ -24,7 +23,7 @@ class Models(commands.Cog):
     @commands.command()
     async def hist(self, ctx):
         history = ''
-        path= "/history.txt"
+        path= "../history.txt" # this file needs to be in /bot folder
         with open(path, 'r', encoding='utf-8') as f:
             history = f.read()
         history = history.replace('\n', ' ')
@@ -32,16 +31,9 @@ class Models(commands.Cog):
 
         await ctx.send(history)
 
-
     @commands.command()
     @commands.check(is_botchat)
     async def activate(self, ctx, type : str = "gpt"):
-        """
-            Add here 2 def function below activate f , that will take arguments and will 
-            activate model with proper arguments
-
-            Better to do it with buttons interactive in discord
-        """
 
         async def defaultGPT_click(interaction: discord.Interaction):
             await interaction.response.send_message('Default  ChatGPT activated: ')
@@ -76,14 +68,12 @@ class Models(commands.Cog):
             await interaction.message.edit(view=view)
 
             message = await self.wait_for_message(ctx)
+            if message == "" : return
             message = message.replace('\n', ' ')
 
             await self.chat_gpt(ctx, history=message)
 
-            # if message:
-            #     await ctx.send(f"You entered: {message}")
-            # else:
-            #     await ctx.send("Timed out!")
+
 
         view = discord.ui.View()
         view.timeout = 20
@@ -103,21 +93,23 @@ class Models(commands.Cog):
 
         await ctx.send('Choose your model:', view=view)
 
-        #await self.chat_gpt(ctx)
-
     async def wait_for_message(self, ctx):
         def check(m):
             return m.channel == ctx.channel and not m.author.bot
 
         try:
             await ctx.send("Enter your personality for ChatGPT under 50 words like this: ")
-            await ctx.send("You are not an assistant, your task is to roleplay as a character.\nCan you talk to me as if you are this character? Please only provide short answers around 15 words and try not to break out of character. Here's her description: 'here!'  ")
+            await ctx.send("`You are not an assistant, your task is to roleplay as a character.\nCan you talk to me as if you are this character? Please only provide short answers around 15 words and try not to break out of character.` Here's her description: 'here!'  ")
 
             message = await self.bot.wait_for('message', check=check, timeout=60.0)
+            if len(message.content.split(' ')) > 50 :
+                await ctx.send("Your personality was to long, try again with !activate")
+                return ""
+
             return message.content
         except asyncio.TimeoutError:
+            await ctx.send("timeout for message")
             print("timeout for message")
-
 
     async def chat_gpt(self, ctx, history=""):
 

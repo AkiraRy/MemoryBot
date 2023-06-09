@@ -15,3 +15,7 @@ test
 *.jpg
 .log
 googlesTOKEN.py
+words_decoder.py
+bad_words_b64
+bad_words.txt
+outdated

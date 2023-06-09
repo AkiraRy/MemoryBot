@@ -25,5 +25,5 @@ Use this code for https://replit.com/
 
 Local version update.log:
 
--> nsfw_detector for sending images with spoiler tag
--> more to be added
+-> So far i`ve created a solid ground for my models to be used.
+-> Going to leave this project for a while and do other stuff

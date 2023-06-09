@@ -1,5 +1,4 @@
 import os
-
 from discord.ext import commands
 import discord
 import dotenv
@@ -9,7 +8,7 @@ from cogs.pictures import Pictures
 dotenv.load_dotenv()
 logger = settings.logging.getLogger("bot")
 
-count = 0
+count = 1
 
 
 async def is_botchat(ctx):
@@ -18,6 +17,7 @@ async def is_botchat(ctx):
 def run():
     intents = discord.Intents.default()
     intents.message_content = True
+    intents.members = True
 
     bot = commands.Bot(command_prefix="!", intents=intents, heartbeat_interval=60.0)
 
@@ -28,6 +28,7 @@ def run():
         # kok loading
         await bot.load_extension("cogs.pictures")
         await bot.load_extension("cogs.models")
+        await bot.load_extension("cogs.voice")
         channel = bot.get_channel(int(os.getenv('BOT_CHAT')))
         await channel.send("Hello there")
 
@@ -41,11 +42,17 @@ def run():
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Missing argument")
 
+
     @bot.command()
     @commands.check(is_botchat)
     async def reload_pictures(ctx):
+        global count
+        print(f"Reload number: {count}")
+        count+=1
         await bot.unload_extension("cogs.pictures")
         await bot.load_extension("cogs.pictures")
+        print("\n")
+
 
     @bot.command()
     @commands.check(is_botchat)
@@ -55,6 +62,16 @@ def run():
         count+=1
         await bot.unload_extension("cogs.models")
         await bot.load_extension("cogs.models")
+        print("\n")
+
+    @bot.command()
+    @commands.check(is_botchat)
+    async def reload_voice(ctx):
+        global count
+        print(f"Reload number: {count}")
+        count+=1
+        await bot.unload_extension("cogs.voice")
+        await bot.load_extension("cogs.voice")
         print("\n")
 
 
